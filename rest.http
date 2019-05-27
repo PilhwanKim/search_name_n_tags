@@ -1,0 +1,21 @@
+### main page
+
+GET http://127.0.0.1:5000/
+
+### 회사명 자동 완성
+
+GET http://127.0.0.1:5000/companies?name=%EC%BD%94%EB%A6%AC%EC%95%84
+
+### 태그명으로 회사 검색
+
+GET http://127.0.0.1:5000/companies?tag=%ED%83%9C%EA%B7%B8_1
+
+### 회사 테그 정보 추가
+
+POST http://127.0.0.1:5000/companies/1/tags/%ED%83%9C%EA%B7%B8_1
+
+### 회사 테그 정보 삭제
+
+DELETE http://127.0.0.1:5000/companies/1/tags/%ED%83%9C%EA%B7%B8_1
+
+###
