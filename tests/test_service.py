@@ -1,48 +1,48 @@
+import pytest
 import service
 
 
-def test_get_companies_by_name():
+def test_get_companies_by_name(app):
     company_name = "코리아"
     language = "ko"
-    companies = service.get_companies_by_name(company_name)
+    companies = service.get_companies_by_name(company_name, language)
     for company in companies:
-        for name in company.names:
-            if name.language == language:
-                assert company_name in name.name
+        assert company_name.lower() in company.get('name').lower()
 
     company_name = "co"
     language = "en"
-    companies = service.get_companies_by_name(company_name)
+    companies = service.get_companies_by_name(company_name, language)
     for company in companies:
-        for name in company.names:
-            if name.language == language:
-                assert company_name in name.name.lower()
+        assert company_name.lower() in company.get('name').lower()
 
 
-def test_get_companies_by_tags():
+def test_get_companies_by_tags(app):
     tag_name = "태그_4"
-    companies = service.get_companies_by_tags(tag_name)
+    language = "ko"
+    companies = service.get_companies_by_tags(tag_name, language)
     for company in companies:
         assert any([
-            True if tag_name == tag.name
+            True if tag_name == tag
             else False
-            for tag in company.tags
+            for tag in company.get('tags')
         ])
 
     tag_name = "tag_19"
-    companies = service.get_companies_by_tags(tag_name)
+    language = "en"
+    companies = service.get_companies_by_tags(tag_name, language)
     for company in companies:
         assert any([
-            True if tag_name == tag.name
+            True if tag_name == tag
             else False
-            for tag in company.tags
+            for tag in company.get('tags')
         ])
 
     tag_name = "タグ_22"
-    companies = service.get_companies_by_tags(tag_name)
+    language = "ja"
+    companies = service.get_companies_by_tags(tag_name, language)
     for company in companies:
         assert any([
-            True if tag_name == tag.name
+            True if tag_name == tag
             else False
-            for tag in company.tags
+            for tag in company.get('tags')
         ])

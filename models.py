@@ -1,13 +1,7 @@
+from flask_sqlalchemy import SQLAlchemy
 from pyexcel_xlsx import get_data
 
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///companies.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
+db = SQLAlchemy()
 
 CompanyTags = db.Table('company_tags',
                        db.Column('company_id', db.Integer, db.ForeignKey('company.id'), primary_key=True),
@@ -88,3 +82,15 @@ def _insert_data_from_excel_to_db():
                 company.tags.append(tag)
         db.session.add(company)
     db.session.commit()
+
+
+def get_companies_by_name(name, language="ko"):
+    return Company.query\
+        .join(CompanyName, Company.names)\
+        .filter(CompanyName.name.ilike("%" + name + "%"), CompanyName.language == language)
+
+
+def get_companies_by_tags(tag_name, language="ko"):
+    return Company.query\
+        .join(Tags, Company.tags)\
+        .filter(Tags.language == language, Tags.name == tag_name)

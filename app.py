@@ -1,9 +1,17 @@
 from flask import Flask
 from flask import request, jsonify
+from flask_sqlalchemy import SQLAlchemy
+import service
+
+
+db = SQLAlchemy()
 
 
 def create_app():
     app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///companies.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    db.init_app(app)
 
     @app.route('/')
     def main():
@@ -24,13 +32,11 @@ def create_app():
         if company_tag and len(company_tag) > 255:
             return "tag parameter value is too long.", 400
 
-        companies = [
-            {
-                "id": 2,
-                "name": "이상한마케팅",
-                "tags": ["태그_25", "태그_6", "태그_14", "태그_9"]
-            }
-        ]
+        if company_name:
+            companies = service.get_companies_by_name(company_name)
+        else:
+            companies = service.get_companies_by_tags(company_tag)
+
         response_data = {
             'search': {
                 'name': company_name,
