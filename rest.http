@@ -12,12 +12,14 @@ GET http://127.0.0.1:5000/companies?tag=%ED%83%9C%EA%B7%B8_1&language=ko
 
 ### 회사 테그 정보 추가
 
-POST http://127.0.0.1:5000/companies/1/tags/%ED%83%9C%EA%B7%B8_1
+POST http://127.0.0.1:5000/companies/1/tags/22
 
 ### 회사 테그 정보 삭제
 
-DELETE http://127.0.0.1:5000/companies/1/tags/%ED%83%9C%EA%B7%B8_1
+DELETE http://127.0.0.1:5000/companies/1/tags/22
 
 ### 404 NOT FOUND 처리
 
-DELETE http://127.0.0.1:5000/companies/1/tags/%ED%83%9C%EA%B7%B8_1/123213
+DELETE http://127.0.0.1:5000/companies/1/tags/3323/123213
+
+###

@@ -11,6 +11,14 @@ def get_companies_by_tags(tag_name, language="ko"):
     return convert_company_to_list(companies_query, language)
 
 
+def attach_tag(company_id, tag_id):
+    models.attach_tag(company_id, tag_id)
+
+
+def detach_tag(company_id, tag_id):
+    models.detach_tag(company_id, tag_id)
+
+
 def convert_company_to_list(companies, language):
     to_companies = []
     for company in companies:

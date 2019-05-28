@@ -46,18 +46,20 @@ def create_app():
         }
         return jsonify(response_data)
 
-    @app.route('/companies/<int:company_id>/tags/<tag_name>', methods=['POST'])
-    def add_tags(company_id, tag_name):
+    @app.route('/companies/<int:company_id>/tags/<int:tag_id>', methods=['POST'])
+    def attach_tag(company_id, tag_id):
+        service.attach_tag(company_id, tag_id)
         return jsonify({
             'company_id': company_id,
-            'tag_name': tag_name
+            'tag_id': tag_id
         })
 
-    @app.route('/companies/<int:company_id>/tags/<tag_name>', methods=['DELETE'])
-    def delete_tags(company_id, tag_name):
+    @app.route('/companies/<int:company_id>/tags/<int:tag_id>', methods=['DELETE'])
+    def detach_tag(company_id, tag_id):
+        service.detach_tag(company_id, tag_id)
         return jsonify({
             'company_id': company_id,
-            'tag_name': tag_name
+            'tag_id': tag_id
         })
 
     @app.errorhandler(404)

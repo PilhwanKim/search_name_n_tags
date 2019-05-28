@@ -41,7 +41,7 @@ def test_get_companies_by_tag(client):
 def test_add_tags(client):
     company_id = 1
     tag_name = "태그_4"
-    result = client.post(url_for("add_tags", company_id=company_id, tag_name=tag_name))
+    result = client.post(url_for("attach_tag", company_id=company_id, tag_name=tag_name))
     assert result.status_code == 200
     assert result.headers.get('Content-Type') == 'application/json'
     assert result.json == {
@@ -53,7 +53,7 @@ def test_add_tags(client):
 def test_delete_tags(client):
     company_id = 1
     tag_name = "태그_4"
-    result = client.delete(url_for("delete_tags", company_id=company_id, tag_name=tag_name))
+    result = client.delete(url_for("detach_tag", company_id=company_id, tag_name=tag_name))
     assert result.status_code == 200
     assert result.headers.get('Content-Type') == 'application/json'
     assert result.json == {
