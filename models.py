@@ -1,3 +1,5 @@
+from pyexcel_xlsx import get_data
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -47,19 +49,44 @@ def create_db():
     db.create_all()
 
 
-def create_data():
-    en_tags = []
-    ko_tags = []
-    jp_tags = []
+def create_db_data():
+    _make_tags()
+    _insert_data_from_excel_to_db()
+
+
+def setup_db():
+    create_db()
+    create_db_data()
+
+
+def _make_tags():
     for i in range(30):
         tag_id = i + 1
-        ko_tags.append(Tags(id=tag_id, language="ko", name="태그_{}".format(tag_id)))
-        en_tags.append(Tags(id=tag_id, language="en", name="tag_{}".format(tag_id)))
-        jp_tags.append(Tags(id=tag_id, language="jp", name="タグ_{}".format(tag_id)))
+        db.session.add(Tags(id=tag_id, language="ko", name="태그_{}".format(tag_id)))
+        db.session.add(Tags(id=tag_id, language="en", name="tag_{}".format(tag_id)))
+        db.session.add(Tags(id=tag_id, language="ja", name="タグ_{}".format(tag_id)))
+    db.session.commit()
 
-    company = Company()
-    company_name = CompanyName(language="ko", name="원티드", isDefault=True)
-    company.name.append(company_name)
-    db.session.add(company)
+
+def _insert_data_from_excel_to_db():
+    xls_data = get_data("wanted_temp_data.xlsx")
+    sheet = xls_data['시트 1 - company_tag_sample']
+    for record in sheet[2:]:
+        company = Company()
+        if record[0]:
+            company.name.append(CompanyName(language="ko", name=record[0], isDefault=True))
+        if record[1]:
+            company.name.append(CompanyName(language="en", name=record[1], isDefault=True))
+        if record[2]:
+            company.name.append(CompanyName(language="ja", name=record[2], isDefault=True))
+        if record[3]:
+            for tag_name in record[3].split("|"):
+                tag_id = tag_name.split("_")[1]
+                # company.tags.append(Tags(id=tag_id, language="ko", name=tag_name).get(id=tag_id, language="ko"))
+                tag = db.session.query(Tags) \
+                    .filter(Tags.id == tag_id, Tags.language == "ko") \
+                    .one()
+                company.tags.append(tag)
+        db.session.add(company)
     db.session.commit()
 
