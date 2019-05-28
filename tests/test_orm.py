@@ -16,8 +16,11 @@ def test_setup_db():
 
 
 def test_get_company_by_name():
-    session = models.db.session()
-    wanted = session.query(Company).join(Company.name).filter(CompanyName.name == "원티드랩").first()
+    company_name = "원티드랩"
+    wanted = Company.query\
+        .join(CompanyName, Company.names)\
+        .filter(CompanyName.name.ilike("%" + company_name + "%"))\
+        .first()
     assert wanted.id
-    assert wanted.name[0].name == "원티드랩"
+    assert wanted.names[0].name == company_name
     assert wanted.tags

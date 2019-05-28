@@ -28,7 +28,7 @@ class CompanyName(db.Model):
     """
     id = db.Column(db.Integer, db.Sequence('company_name_id_seq'), primary_key=True)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
-    company = db.relationship('Company', backref=db.backref('name', lazy=True))
+    company = db.relationship('Company', backref=db.backref('names', lazy=True))
     language = db.Column(db.String(80))
     name = db.Column(db.String(120), nullable=True)
     isDefault = db.Column(db.Boolean, default=False)
@@ -74,19 +74,17 @@ def _insert_data_from_excel_to_db():
     for record in sheet[2:]:
         company = Company()
         if record[0]:
-            company.name.append(CompanyName(language="ko", name=record[0], isDefault=True))
+            company.names.append(CompanyName(language="ko", name=record[0], isDefault=True))
         if record[1]:
-            company.name.append(CompanyName(language="en", name=record[1], isDefault=True))
+            company.names.append(CompanyName(language="en", name=record[1], isDefault=True))
         if record[2]:
-            company.name.append(CompanyName(language="ja", name=record[2], isDefault=True))
+            company.names.append(CompanyName(language="ja", name=record[2], isDefault=True))
         if record[3]:
             for tag_name in record[3].split("|"):
                 tag_id = tag_name.split("_")[1]
-                # company.tags.append(Tags(id=tag_id, language="ko", name=tag_name).get(id=tag_id, language="ko"))
                 tag = db.session.query(Tags) \
                     .filter(Tags.id == tag_id, Tags.language == "ko") \
                     .one()
                 company.tags.append(tag)
         db.session.add(company)
     db.session.commit()
-
