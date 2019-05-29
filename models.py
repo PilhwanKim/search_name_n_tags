@@ -47,7 +47,7 @@ def create_db():
 
 
 def create_db_data():
-    # _make_tags()
+    _make_tags()
     _insert_data_from_excel_to_db()
 
 
